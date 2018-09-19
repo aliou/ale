@@ -29,7 +29,7 @@ function! ale#hover#HandleTSServerResponse(conn_id, response) abort
             \&& ale#Var(l:options.buffer, 'set_balloons')
                 call balloon_show(a:response.body.displayString)
             else
-                call ale#util#ShowMessage(a:response.body.displayString)
+                call ale#util#ShowMessage(a:response.body.displayString, {})
             endif
         endif
     endif
@@ -85,7 +85,7 @@ function! ale#hover#HandleLSPResponse(conn_id, response) abort
                 \&& ale#Var(l:options.buffer, 'set_balloons')
                     call balloon_show(l:str)
                 else
-                    call ale#util#ShowMessage(l:str)
+                    call ale#util#ShowMessage(l:str, {'filetype': 'markdown'})
                 endif
             endif
         endif

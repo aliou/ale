@@ -16,9 +16,15 @@ endfunction
 " Vim 8 does not support echoing long messages from asynchronous callbacks,
 " but NeoVim does. Small messages can be echoed in Vim 8, and larger messages
 " have to be shown in preview windows.
-function! ale#util#ShowMessage(string) abort
+function! ale#util#ShowMessage(string, opts) abort
+    let l:filetypes = ['ale-preview', 'message']
+    if has_key(a:opts, 'filetype')
+        let l:filetypes = extend(l:filetypes, [get(a:opts, 'filetype')])
+    endif
+    let l:filetype = join(l:filetypes, '.')
+
     if !has('nvim')
-        call ale#preview#CloseIfTypeMatches('ale-preview.message')
+        call ale#preview#CloseIfTypeMatches(l:filetype)
     endif
 
     " We have to assume the user is using a monospace font.
@@ -26,7 +32,7 @@ function! ale#util#ShowMessage(string) abort
         execute 'echo a:string'
     else
         call ale#preview#Show(split(a:string, "\n"), {
-        \   'filetype': 'ale-preview.message',
+        \   'filetype': l:filetype,
         \   'stay_here': 1,
         \})
     endif
